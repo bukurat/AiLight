@@ -4,8 +4,8 @@
  * This file is part of the Ai-Thinker RGBW Light Firmware.
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
-
- * Created by Sacha Telgenhof <stelgenhof at gmail dot com>
+ *
+ * Created by Sacha Telgenhof <me at sachatelgenhof dot com>
  * (https://www.sachatelgenhof.nl)
  * Copyright (c) 2016 - 2018 Sacha Telgenhof
  */
@@ -79,6 +79,8 @@ void loadFactoryDefaults() {
   // REST API
   cfg.api = REST_API_ENABLED;
   os_strcpy(cfg.api_key, ADMIN_PASSWORD);
+
+  cfg.powerup_mode = POWERUP_MODE;
 
   EEPROM_write(cfg);
 }

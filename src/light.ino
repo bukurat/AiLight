@@ -7,8 +7,8 @@
  * This file is part of the Ai-Thinker RGBW Light Firmware.
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
-
- * Created by Sacha Telgenhof <stelgenhof at gmail dot com>
+ *
+ * Created by Sacha Telgenhof <me at sachatelgenhof dot com>
  * (https://www.sachatelgenhof.nl)
  * Copyright (c) 2016 - 2018 Sacha Telgenhof
  */
@@ -261,6 +261,11 @@ bool processJson(char *message) {
     }
   }
 
+  if (root.containsKey(KEY_GAMMA_CORRECTION)) {
+    bool use_gamma_correction = root[KEY_GAMMA_CORRECTION];
+    AiLight.useGammaCorrection(use_gamma_correction);
+  }
+
   return true;
 }
 
@@ -309,6 +314,7 @@ void createStateJSON(JsonObject &object) {
  * @brief Bootstrap function for the RGBW light
  */
 void setupLight() {
+
   // Restore last used settings (Note: set colour temperature first as it
   // changed the RGB channels!)
   AiLight.setColorTemperature(cfg.color_temp);
@@ -316,7 +322,19 @@ void setupLight() {
   AiLight.setWhite(cfg.color.white);
   AiLight.setBrightness(cfg.brightness);
   AiLight.useGammaCorrection(cfg.gamma);
-  AiLight.setState(cfg.is_on);
+
+  switch (cfg.powerup_mode) {
+  case POWERUP_ON:
+    AiLight.setState(true);
+    break;
+  case POWERUP_SAME:
+    AiLight.setState(cfg.is_on);
+    break;
+  case POWERUP_OFF:
+  default:
+    AiLight.setState(false);
+    break;
+  }
 
   mqttRegister(deviceMQTTCallback);
 }
